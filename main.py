@@ -11,7 +11,6 @@ from random import randrange
 #init variables
 agent_array = []
 obstacle_array = []
-freeze = False
 speed_adjustment = 0
 
 #CONSTANTS
@@ -26,8 +25,8 @@ COHESION_RADIUS = 170
 SEPERATION_RADIUS = 30
 OBSTACLE_DOGDGE_RADIUS = 70
 
-MAX_SPEED = 30
-MIN_SPEED = 2
+MAX_SPEED = 25
+MIN_SPEED = 1
 
 def computeAlignment(myAgent,t):
     compute_vel = (0,0)
@@ -111,9 +110,6 @@ def agent_update():
     global agent_array
     temp_agent_array = []
 
-    if freeze:
-        return
-
     for i in range(len(agent_array)):
         agent = agent_array[i]
         temp_vel = (0,0)
@@ -129,7 +125,10 @@ def agent_update():
                    utils.v_mul(obstacle_dodge_v, OBSTACLE_DOGDGE_WEIGHT)
                    ]
 
+
         temp_vel = utils.v_array_sum(v_array)
+        temp_vel = utils.v_mul(temp_vel,FPS)
+
         a = Agent(agent.pos, temp_vel)
         if i%2:
             a.vel = utils.limit(temp_vel, DEFAULT_SPEED + 6 + speed_adjustment)
@@ -150,10 +149,6 @@ def clear_all_item():
     agent_array = []
     obstacle_array = []
 
-def toggle_freeze_agent():
-    global freeze
-    freeze = not freeze
-
 def adjust_speed(type):
     global speed_adjustment
     if type:
@@ -166,17 +161,19 @@ def adjust_speed(type):
     elif speed_adjustment < MIN_SPEED:
         speed_adjustment = MIN_SPEED
 
+
 #pygame variables
-WIDTH = 1300
-HEIGHT = 680
+WIDTH = 1500
+HEIGHT = 800
 TITLE = "FLOCKING"
-FPS = 100
+FPS = 60
 BACKGROUND = (0,0,0)
 AGENT_COLOR = [(116,175,173),(222,27,26)]
-OBSTACLE_COLOR = (30,207,214)
+OBSTACLE_COLOR = (250,250,250)
 TEXT_COLOR = (255,255,255)
-TRI_BASE = 10
-TRI_HEIGHT = 15
+TRI_BASE = [12,10,]
+TRI_HEIGHT = [18,15]
+MAX_AGENT_COUNT = 60
 
 pyg.init()
 clock = pyg.time.Clock()
@@ -189,35 +186,44 @@ def make_agent_inbound():
         agent.pos = agent.pos[0] % WIDTH, agent.pos[1] % HEIGHT
 
 def draw_text():
-    font = pyg.font.SysFont("consolas",12)
+    font = pyg.font.SysFont("consolas",16)
     text_array = [
                   font.render("Clock FPS: {}".format(int(clock.get_fps())),20,TEXT_COLOR),
-                  font.render("Clock Ticks: {}".format(pyg.time.get_ticks() / 1000),10,TEXT_COLOR),
+                  font.render("Clock Ticks: {}".format(pyg.time.get_ticks()),10,TEXT_COLOR),
                   font.render("Agent Count: {}".format(len(agent_array)),20,TEXT_COLOR),
                   font.render("Obstacle Count: {}".format(len(obstacle_array)),20,TEXT_COLOR),
                   font.render("Red Agent Speed: {}".format(DEFAULT_SPEED + speed_adjustment + 6),20,TEXT_COLOR),
                   font.render("Blue Agent Speed: {}".format(DEFAULT_SPEED + speed_adjustment),20,TEXT_COLOR)
                  ]
+
+    #display "Agents Reached Max" when agent count reaches max
+    if MAX_AGENT_COUNT == len(agent_array):
+        text_array[2] = font.render("Agent Count: {} (Agents Reached Max)".format(len(agent_array)),20,TEXT_COLOR)
+
     for i in range(len(text_array)):
         text = text_array[i]
         screen.blit(text,(2,3 + i*15))
 
 def draw_agent():
-    for i in range(len(agent_array)):
+    agent_array_size = len(agent_array)
+
+    for i in range(agent_array_size):
         agent = agent_array[i]
         make_agent_inbound()
-        pointlist = utils.boid_pointlist(TRI_BASE,TRI_HEIGHT)
-        surface = pyg.Surface((TRI_BASE, TRI_HEIGHT), pyg.SRCALPHA).convert_alpha()
+        pointlist = utils.boid_pointlist(TRI_BASE[i%2],TRI_HEIGHT[i%2])
+        surface = pyg.Surface((TRI_BASE[i%2], TRI_HEIGHT[i%2]), pyg.SRCALPHA).convert_alpha()
         pyg.draw.polygon(surface,AGENT_COLOR[i%2],pointlist, 0)
         rotate = pyg.transform.rotate(surface,-agent_degree_rotation(agent))
-        center = v_sub(agent.pos,(TRI_BASE/2, TRI_HEIGHT / 2))
+        center = v_sub(agent.pos,(TRI_BASE[i%2] / 2, TRI_HEIGHT[i%2] / 2))
         screen.blit(rotate, center)
 
 def draw_obstacle():
     for obs in obstacle_array:
-        pyg.draw.circle(screen,OBSTACLE_COLOR,obs.pos,obs.radius,0)
+        #pyg.draw.circle(screen,OBSTACLE_COLOR,obs.pos,obs.radius,0)
+        pyg.draw.rect(screen, OBSTACLE_COLOR, (obs.pos[0], obs.pos[1], obs.radius, obs.radius), 0)
 
 def run():
+
     while True:
         for event in pyg.event.get():
             if event.type == pyg.QUIT:
@@ -227,15 +233,15 @@ def run():
                 clear_all_item()
             elif pyg.key.get_pressed()[pyg.K_r]:
                 randomize_position()
-            elif pyg.key.get_pressed()[pyg.K_f]:
-                toggle_freeze_agent()
             elif pyg.key.get_pressed()[pyg.K_UP]:
                 adjust_speed(1)
             elif pyg.key.get_pressed()[pyg.K_DOWN]:
                 adjust_speed(0)
-            elif pyg.mouse.get_pressed()[0]:
+            elif pyg.mouse.get_pressed()[0] and MAX_AGENT_COUNT > len(agent_array):
+                # append new agent
                 agent_array.append(Agent(pyg.mouse.get_pos()))
             elif pyg.mouse.get_pressed()[2]:
+                # append new obstacle
                 obstacle_array.append(Obstacle(pyg.mouse.get_pos()))
 
         screen.fill(BACKGROUND)

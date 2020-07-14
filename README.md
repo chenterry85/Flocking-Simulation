@@ -7,3 +7,14 @@ Flocking is a simulation where there are boids in flocks. The boids move around 
 **Alignment**: A boid wants to move in the same direction as the others.
 
 **Cohesion**: A boid wants to stay close to the other boids.
+
+
+## Installation
+
+```bash
+
+#install dependencies
+python3 -m pip install -U pygame==2.0.0.dev6 --user
+
+
+```

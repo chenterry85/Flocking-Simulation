@@ -1,5 +1,4 @@
 import math
-import pygame as pyg
 from Agent import *
 from operator import add, sub
 
