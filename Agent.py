@@ -1,5 +1,5 @@
 from math import sqrt
-import utils
+from utils import v_add
 
 DEFAULT_SPEED = 4
 
@@ -13,4 +13,4 @@ class Agent(object):
         return sqrt((other_agent.pos[0] - self.pos[0])**2 + (other_agent.pos[1] - self.pos[1]) **2)
 
     def update_pos(self):
-        self.pos = utils.v_add(self.pos,self.vel)
+        self.pos = v_add(self.pos,self.vel)

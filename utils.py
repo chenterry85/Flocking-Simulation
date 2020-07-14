@@ -1,5 +1,6 @@
+# Utility Class (frequent operations)
+
 import math
-from Agent import *
 from operator import add, sub
 
 def magnitude(vel):

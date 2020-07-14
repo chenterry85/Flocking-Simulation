@@ -1,3 +1,5 @@
+# Shared Global Variables
+
 def init():
     global agent_array, obstacle_array, speed_adjustment, WIDTH, HEIGHT, FPS
 
