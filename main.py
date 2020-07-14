@@ -11,11 +11,11 @@ import pygame as pyg
 #pygame variables
 TITLE = "FLOCKING"
 BACKGROUND = (0,0,0)
-AGENT_COLOR = [(116,175,173),(222,27,26)]
+AGENT_COLOR = [(116,175,173),(222,27,26)] # [agent 1, agent 2]
 OBSTACLE_COLOR = (250,250,250)
 TEXT_COLOR = (255,255,255)
-TRI_BASE = [12,10,]
-TRI_HEIGHT = [18,15]
+TRI_BASE = [12,10] # [agent 1, agent 2]
+TRI_HEIGHT = [18,15] # [agent 1, agent 2]
 MAX_AGENT_COUNT = 60
 
 #Initialize Display
@@ -24,7 +24,6 @@ pyg.init()
 clock = pyg.time.Clock()
 screen = pyg.display.set_mode((shared.WIDTH, shared.HEIGHT))
 pyg.display.set_caption(TITLE)
-
 
 def make_agent_inbound():
     for agent in shared.agent_array:
@@ -65,7 +64,8 @@ def draw_agent():
 
 def draw_obstacle():
     for obs in shared.obstacle_array:
-        pyg.draw.rect(screen, OBSTACLE_COLOR, (obs.pos[0], obs.pos[1], obs.radius, obs.radius), 0)
+        width = obs.width
+        pyg.draw.rect(screen, OBSTACLE_COLOR, (obs.pos[0] - width/2, obs.pos[1] - width/2, width, width), 0)
 
 def run():
     #game loop
