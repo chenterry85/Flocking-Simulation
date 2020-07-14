@@ -1,4 +1,4 @@
-from math import *
+from math import sqrt
 import utils
 
 DEFAULT_SPEED = 4
@@ -9,8 +9,8 @@ class Agent(object):
         self.pos = (pos[0],pos[1])
         self.vel = vel
 
-    def distanceFrom(self,other_agent):
+    def distance_from(self,other_agent):
         return sqrt((other_agent.pos[0] - self.pos[0])**2 + (other_agent.pos[1] - self.pos[1]) **2)
 
-    def updatePos(self):
+    def update_pos(self):
         self.pos = utils.v_add(self.pos,self.vel)

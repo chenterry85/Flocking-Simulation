@@ -1,10 +1,10 @@
-from utils import v_sub, boid_pointlist, agent_degree_rotation
+from utils import v_sub, boid_pointlist, agent_degree_rotation, limit
+from Agent import DEFAULT_SPEED, Agent
+from Obstacle import Obstacle
+import shared
+import domain
 import sys
 import pygame as pyg
-from Agent import *
-from Obstacle import *
-import shared
-import Domain
 
 #pygame variables
 TITLE = "FLOCKING"
@@ -16,11 +16,10 @@ TRI_BASE = [12,10,]
 TRI_HEIGHT = [18,15]
 MAX_AGENT_COUNT = 60
 
-
+#Initialize Display
 shared.init()
 pyg.init()
 clock = pyg.time.Clock()
-
 screen = pyg.display.set_mode((shared.WIDTH, shared.HEIGHT))
 pyg.display.set_caption(TITLE)
 
@@ -44,14 +43,15 @@ def draw_text():
     if MAX_AGENT_COUNT == len(shared.agent_array):
         text_array[2] = font.render("Agent Count: {} (Agents Reached Max)".format(len(shared.agent_array)),20,TEXT_COLOR)
 
+    #display text
     for i in range(len(text_array)):
         text = text_array[i]
         screen.blit(text,(2,3 + i*15))
 
 def draw_agent():
-    shared.agent_array_size = len(shared.agent_array)
+    agent_array_size = len(shared.agent_array)
 
-    for i in range(shared.agent_array_size):
+    for i in range(agent_array_size):
         agent = shared.agent_array[i]
         make_agent_inbound()
         pointlist = boid_pointlist(TRI_BASE[i%2],TRI_HEIGHT[i%2])
@@ -66,8 +66,9 @@ def draw_obstacle():
         pyg.draw.rect(screen, OBSTACLE_COLOR, (obs.pos[0], obs.pos[1], obs.radius, obs.radius), 0)
 
 def run():
-
+    #game loop
     while True:
+
         for event in pyg.event.get():
             if event.type == pyg.QUIT:
                 #quit game
@@ -75,16 +76,16 @@ def run():
                 sys.exit()
             elif pyg.key.get_pressed()[pyg.K_c]:
                 #clear canvas
-                Domain.clear_all_item()
+                domain.clear_all_item()
             elif pyg.key.get_pressed()[pyg.K_r]:
                 #randomize all agents' position
-                Domain.randomize_position()
+                domain.randomize_position()
             elif pyg.key.get_pressed()[pyg.K_UP]:
                 #increase agent speed
-                Domain.adjust_speed(1)
+                domain.adjust_speed(1)
             elif pyg.key.get_pressed()[pyg.K_DOWN]:
                 #decrease agent speed
-                Domain.adjust_speed(0)
+                domain.adjust_speed(0)
             elif pyg.mouse.get_pressed()[0] and MAX_AGENT_COUNT > len(shared.agent_array):
                 # append new agent
                 shared.agent_array.append(Agent(pyg.mouse.get_pos()))
@@ -96,7 +97,8 @@ def run():
         draw_agent()
         draw_obstacle()
         draw_text()
-        Domain.agent_update()
+
+        domain.agent_update()
         pyg.display.update()
         clock.tick(shared.FPS)
 
