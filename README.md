@@ -1,4 +1,4 @@
-# Flocking simulation
+# Flocking Simulation
 
 Flocking is a simulation that consists of boids in groups. The boids maneuver around to simulate real-life flocking behavior such as birds and fish. Boid is short for bird-oid, but they are just generic objects that interact with other boids to form flocks. Each boid follows three behaviors: **separation**, **alignment**, and **cohesion**.
 
