@@ -1,3 +1,5 @@
+#Main Class
+
 from utils import v_sub, boid_pointlist, agent_degree_rotation, limit
 from Agent import DEFAULT_SPEED, Agent
 from Obstacle import Obstacle
