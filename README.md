@@ -4,7 +4,7 @@ Flocking is a simulation that consists of boids in groups. The boids maneuver ar
 
 **Separation**: A boid does not want to be too close to other boids.                     **Alignment**: A boid wants to move in the same direction as the others.                  **Cohesion**: A boid wants to stay close to the other boids.
 
-<img src="https://user-images.githubusercontent.com/60279271/87457229-9cd79b80-c63a-11ea-9266-9d041e125788.gif" width="100%" />
+<img src="https://user-images.githubusercontent.com/60279271/87678541-aaf9f900-c7ad-11ea-9e09-2efc98e1491f.gif" width="100%" />
 
 ## Installation
 
