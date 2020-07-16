@@ -21,10 +21,10 @@ python3 main.py
 
 ## Controls
 
-Press:
-- **"Left Click"** - add new boid
-- **"Right Click"** - add new obstacle
-- **"↑"** arrow key - speed up boid
-- **"↓"** arrow key - slow down boid
-- **"r"** key - randomize boid position
-- **"c"** key - clear canvas
+**Press:**
+- **"Left Click"** → add new boid
+- **"Right Click"** → add new obstacle
+- **"↑"** arrow key → speed up boid
+- **"↓"** arrow key → slow down boid
+- **"r"** key → randomize boid position
+- **"c"** key → clear canvas
