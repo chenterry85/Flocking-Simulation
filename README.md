@@ -8,6 +8,9 @@ Flocking is a simulation that consists of boids in groups. The boids maneuver ar
 
 <img src="https://user-images.githubusercontent.com/60279271/87678541-aaf9f900-c7ad-11ea-9e09-2efc98e1491f.gif" width="100%" />
 
+## Requirements
+- Python 3.6+
+
 ## Installation
 
 ```bash
